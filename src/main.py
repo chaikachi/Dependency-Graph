@@ -44,6 +44,18 @@ def get_dependencies(arg, name, version = None):
             deps.append(dep['crate_id'])
         return deps
 
+def reverse_dependencies(arg, name, version = None):
+    c_url = arg.url.rstrip("/")
+    full_url = f"{c_url}/api/v1/crates/{name}/reverse_dependencies"
+    res = urllib.request.Request(full_url)
+    with urllib.request.urlopen(res) as req:
+        b_tx = req.read().decode("utf-8")
+        loaded_file = json.loads(b_tx)
+        deps = []
+        for dep in loaded_file.get('versions',[]):
+            deps.append(dep['crate'])
+        return deps
+
 def test_mode(args):
     graph = {}
     with open(args.url, "r") as r:
@@ -62,6 +74,15 @@ def test_mode(args):
             graph[name] = deps
     return graph
 
+def reverse_graph(graph):
+    rev_graph = {}
+    for parent, children in graph.items():
+        for child in children:
+            if child not in rev_graph:
+                rev_graph[child] = []
+            rev_graph[child].append(parent)
+    return rev_graph
+
 def dfs(node, graph, depth, args, version = None):
     if depth >= args.depth:
         return
@@ -71,9 +92,9 @@ def dfs(node, graph, depth, args, version = None):
     visited.add(node)
     traversal_order.append(node)
     if args.test:
-        neighbors = graph[node]
+        neighbors = graph.get(node, [])
     else:
-        neighbors = get_dependencies(args, node, version)
+        neighbors = reverse_dependencies(args, node, version)
     for neighbor in neighbors:
         if args.filter and args.filter in neighbor:
             continue
@@ -91,7 +112,7 @@ def start():
     args=parser()
     verify(args)
     if args.test:
-        graph = test_mode(args)
+        graph = reverse_graph(test_mode(args))
     else:
         graph = {}
     dfs(args.name, graph, 0, args, args.version)
