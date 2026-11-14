@@ -1,5 +1,7 @@
 import argparse
 import sys
+import urllib.request
+import json
 
 def verify(args):
     if args.name.strip()=="":
@@ -19,15 +21,20 @@ def parser():
     parser.add_argument('filter', type=str)
     return parser.parse_args()
 
+def get_dependencies(args):
+    clean_url = args.url.rstrip("/")
+    full_url = f"{args.url}/api/v1/crates/{args.name}/{args.version}/dependencies"
+    req = urllib.request.Request(full_url)
+    with urllib.request.urlopen(req) as req:
+        b_tx = req.read().decode("utf-8")
+        loaded_file = json.loads(b_tx)
+        for dep in loaded_file.get('dependencies',[]):
+            print(dep['crate_id'])
+
 def start():
     args=parser()
     verify(args)
-    print(f"Имя пакета: {args.name}")
-    print(f"Адрес/путь пакета: {args.url}")
-    print(f"Тестовый режим: {args.test}")
-    print(f"Версия пакета: {args.version}")
-    print(f"Глубина анализа зависимостей: {args.depth}")
-    print(f"Подстрока для фильтрации: {args.filter}")
+    get_dependencies(args)
 
 if __name__ == "__main__":
     start()
