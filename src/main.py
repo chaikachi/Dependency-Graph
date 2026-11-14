@@ -2,6 +2,7 @@ import argparse
 import sys
 import urllib.request
 import json
+import webbrowser
 
 visited = set()
 traversal_order = []
@@ -94,7 +95,7 @@ def dfs(node, graph, depth, args, version = None):
     if args.test:
         neighbors = graph.get(node, [])
     else:
-        neighbors = reverse_dependencies(args, node, version)
+        neighbors = get_dependencies(args, node, version)
     for neighbor in neighbors:
         if args.filter and args.filter in neighbor:
             continue
@@ -108,15 +109,31 @@ def print_graph():
         else:
             print(f"{pkg} ->")
 
+def plantuml():
+    lines = ["@startuml"]
+    for name, deps in res_graph.items():
+        if deps:
+            deps = set(deps)
+            for dep in deps:
+                lines.append(f"[{name}] --> [{dep}]")
+        else:
+            lines.append(f"[{name}]")
+    lines.append("@enduml")
+    plantuml_text = "\n".join(lines)
+    print(plantuml_text)
+    e_tx = plantuml_text.encode('utf-8').hex()
+    url = f"http://plantuml.com/plantuml/png/~h{e_tx}"
+    webbrowser.open(url)
+
 def start():
     args=parser()
     verify(args)
     if args.test:
-        graph = reverse_graph(test_mode(args))
+        graph = test_mode(args)
     else:
         graph = {}
     dfs(args.name, graph, 0, args, args.version)
-    print_graph()
+    plantuml()
 
 if __name__ == "__main__":
     start()
