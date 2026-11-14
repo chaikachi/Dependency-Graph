@@ -10,7 +10,7 @@ def verify(args):
         sys.exit("Пустой адрес")
     if args.depth<=0:
         sys.exit("Недопустимая глубина")
-        
+
 def parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('name', type=str)
@@ -21,9 +21,9 @@ def parser():
     parser.add_argument('filter', type=str)
     return parser.parse_args()
 
-def get_dependencies(args):
-    clean_url = args.url.rstrip("/")
-    full_url = f"{args.url}/api/v1/crates/{args.name}/{args.version}/dependencies"
+def get_dependencies(arg):
+    clean_url = arg.url.rstrip("/")
+    full_url = f"{arg.url}/api/v1/crates/{arg.name}/{arg.version}/dependencies"
     req = urllib.request.Request(full_url)
     with urllib.request.urlopen(req) as req:
         b_tx = req.read().decode("utf-8")
