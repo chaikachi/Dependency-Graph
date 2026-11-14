@@ -22,8 +22,8 @@ def parser():
     return parser.parse_args()
 
 def get_dependencies(arg):
-    clean_url = arg.url.rstrip("/")
-    full_url = f"{arg.url}/api/v1/crates/{arg.name}/{arg.version}/dependencies"
+    c_url = arg.url.rstrip("/")
+    full_url = f"{c_url}/api/v1/crates/{arg.name}/{arg.version}/dependencies"
     req = urllib.request.Request(full_url)
     with urllib.request.urlopen(req) as req:
         b_tx = req.read().decode("utf-8")
