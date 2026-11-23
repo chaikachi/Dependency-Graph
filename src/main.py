@@ -71,7 +71,7 @@ def test_mode(args):
                 n_deps = cols[1].split(",")
                 for s in n_deps:
                     s = s.strip()
-                    deps.append(s)
+                    deps.append((s, ""))
             graph[name] = deps
     return graph
 
