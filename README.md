@@ -39,19 +39,20 @@ python ../src/main.py rand https://crates.io "" 0.10.3 1 ""
 Результат работы программы:
 ```plantuml
 @startuml
-[rand] --> [rand_pcg]
-[rand] --> [chacha20]
-[rand] --> [rayon]
-[rand] --> [serde]
-[rand] --> [serde_json]
-[rand] --> [getrandom]
-[rand] --> [postcard]
-[rand] --> [rand_core]
+[rand] --> [rand_core] : "^0.10.0"
+[rand] --> [getrandom] : "^0.4.0"
+[rand] --> [postcard] : "^1.1.3"
+[rand] --> [chacha20] : "^0.10.0"
+[rand] --> [serde_json] : "^1.0.140"
+[rand] --> [rayon] : "^1.7"
+[rand] --> [serde] : "^1.0.103"
+[rand] --> [rand_pcg] : "^0.10"
 @enduml
 ```
 Визуализация в формате PNG:
 
-<img width="1079" height="172" alt="rand_dependencies" src="https://github.com/user-attachments/assets/05ec25a2-4b78-471c-b8f7-411f8cdbf6fc" />
+<img width="1079" height="189" alt="rand_dependencies_w_version" src="https://github.com/user-attachments/assets/503dbddf-dc2f-4e38-b4e1-c4a0764009e0" />
+
 <br>
 
 2. Визуализация графа зависимостей из текстового файла с исключением пакета
@@ -92,32 +93,32 @@ python ../src/main.py anstyle https://crates.io/ "" 1.0.14 2 ""
 Результат работы программы:
 ```plantuml
 @startuml
-[anstyle] --> [snapbox]
-[anstyle] --> [lexopt]
+[anstyle] --> [snapbox] : "^0.6.23"
+[anstyle] --> [lexopt] : "^0.3.1"
 [lexopt]
-[snapbox] --> [escargot]
-[snapbox] --> [walkdir]
-[snapbox] --> [os_pipe]
-[snapbox] --> [serde]
-[snapbox] --> [automod]
-[snapbox] --> [anstyle]
-[snapbox] --> [snapbox-macros]
-[snapbox] --> [wait-timeout]
-[snapbox] --> [anstream]
-[snapbox] --> [document-features]
-[snapbox] --> [anstyle-svg]
-[snapbox] --> [regex]
-[snapbox] --> [windows-sys]
-[snapbox] --> [backtrace]
-[snapbox] --> [content_inspector]
-[snapbox] --> [similar]
-[snapbox] --> [filetime]
-[snapbox] --> [serde_json]
-[snapbox] --> [libc]
-[snapbox] --> [normalize-line-endings]
-[snapbox] --> [dunce]
-[snapbox] --> [tempfile]
+[snapbox] --> [document-features] : "^0.2.12"
+[snapbox] --> [similar] : "^3.0.0"
+[snapbox] --> [backtrace] : "^0.3"
+[snapbox] --> [anstyle-svg] : "^1.1.0"
+[snapbox] --> [anstream] : "^1.0.0"
+[snapbox] --> [walkdir] : "^2.5.0"
+[snapbox] --> [normalize-line-endings] : "^0.3.0"
+[snapbox] --> [serde_json] : "^1.0.149"
+[snapbox] --> [tempfile] : "^3.27"
+[snapbox] --> [regex] : "^1.12.3"
+[snapbox] --> [snapbox-macros] : "^1.1.0"
+[snapbox] --> [wait-timeout] : "^0.2.1"
+[snapbox] --> [serde] : "^1.0.228"
+[snapbox] --> [dunce] : "^1.0"
+[snapbox] --> [automod] : "^1.0.16"
+[snapbox] --> [content_inspector] : "^0.2.4"
+[snapbox] --> [os_pipe] : "^1.2"
+[snapbox] --> [libc] : "^0.2.183"
+[snapbox] --> [filetime] : "^0.2.27"
+[snapbox] --> [windows-sys] : "^0.61.2"
+[snapbox] --> [escargot] : "^0.5.15"
+[snapbox] --> [anstyle] : "^1.0.14"
 @enduml
 ```
 Визуализация в формате PNG:
-<img width="3094" height="280" alt="anstyle_dependencies" src="https://github.com/user-attachments/assets/abbdde43-15a0-43ce-9fac-591eb6c0ae39" />
+<img width="3095" height="312" alt="anstyle_dependencies_w_versions" src="https://github.com/user-attachments/assets/7a1372de-26d9-4310-b120-7efeebf39a00" />
