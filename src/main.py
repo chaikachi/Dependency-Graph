@@ -42,7 +42,7 @@ def get_dependencies(arg, name, version = None):
         loaded_file = json.loads(b_tx)
         deps = []
         for dep in loaded_file.get('dependencies',[]):
-            deps.append(dep['crate_id'])
+            deps.append((dep['crate_id'], dep['req']))
         return deps
 
 def reverse_dependencies(arg, name, version = None):
@@ -54,7 +54,7 @@ def reverse_dependencies(arg, name, version = None):
         loaded_file = json.loads(b_tx)
         deps = []
         for dep in loaded_file.get('versions',[]):
-            deps.append(dep['crate'])
+            deps.append((dep['crate'], dep['req']))
         return deps
 
 def test_mode(args):
@@ -96,11 +96,11 @@ def dfs(node, graph, depth, args, version = None):
         neighbors = graph.get(node, [])
     else:
         neighbors = get_dependencies(args, node, version)
-    for neighbor in neighbors:
-        if args.filter and args.filter in neighbor:
+    for name, req in neighbors:
+        if args.filter and args.filter in name:
             continue
-        res_graph[node].append(neighbor)
-        dfs(neighbor, graph, depth+1, args)
+        res_graph[node].append((name, req))
+        dfs(name, graph, depth+1, args)
 
 def print_graph():
     for pkg, deps in res_graph.items():
@@ -111,13 +111,13 @@ def print_graph():
 
 def plantuml():
     lines = ["@startuml"]
-    for name, deps in res_graph.items():
+    for parent, deps in res_graph.items():
         if deps:
             deps = set(deps)
-            for dep in deps:
-                lines.append(f"[{name}] --> [{dep}]")
+            for name, req in deps:
+                lines.append(f'[{parent}] --> [{name}] : "{req}"')
         else:
-            lines.append(f"[{name}]")
+            lines.append(f"[{parent}]")
     lines.append("@enduml")
     plantuml_text = "\n".join(lines)
     print(plantuml_text)
